@@ -41,3 +41,13 @@ Vi trenger følgende extensions:
 ### Github
 
 git remote add origin git@github.com:espenhoh/sigmabott.git
+
+
+## Kjør prosjekt
+
+` uv run src/test_env.py `
+
+
+## Studie
+
+Dag 1: [candlestick-charting-what-is-it](https://www.investopedia.com/trading/candlestick-charting-what-is-it/)
