@@ -34,3 +34,10 @@ Vi trenger følgende extensions:
 - Python (Microsoft)
 - Pylance
 - Jupyter (for notebooks)
+
+
+## Git
+
+### Github
+
+git remote add origin git@github.com:espenhoh/sigmabott.git
