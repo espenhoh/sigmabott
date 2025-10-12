@@ -34,7 +34,7 @@ def download_yf(
     # Lagre til parquet cache
     # Normaliser filnavn
     fname = "-".join(symbols) if isinstance(symbols, list) else symbols
-    filepath = Path(outdir) / f"{fname}_{interval}"
+    filepath = outdir + '\\' + f"{fname}_{interval}"
     parquet_cache.write_parquet_cache(
         data,
         filepath,
