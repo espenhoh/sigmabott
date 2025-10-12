@@ -1,0 +1,50 @@
+import yfinance as yf
+import pandas as pd
+import parquet_cache
+from pathlib import Path
+
+def download_yf(
+    symbols,
+    period="6mo",
+    interval="1h",
+    price_type="Close",
+    cache=True,
+    outdir="data"
+):
+    """
+    Henter historiske data fra Yahoo Finance for én eller flere tickere.
+    Rydder opp i MultiIndex og returnerer et rent DataFrame.
+
+    Args:
+        symbols (str | list[str]): Ticker eller liste av tickere, f.eks. "BTC-USD" eller ["BTC-USD", "ETH-USD"]
+        period (str): Hvor langt tilbake, f.eks. "1y", "6mo", "3mo"
+        interval (str): Tidsintervall, f.eks. "1h", "4h", "1d"
+        price_type (str): Felt som beholdes ved flere tickere ("Close", "Open", osv.)
+        save_csv (bool): Lagre CSV automatisk
+        outdir (str): Katalog for CSV-filer
+    Returns:
+        pd.DataFrame: Data med kolonner = tickere, rader = tidsstempel
+    """
+
+    # Hent data
+    data = yf.download(symbols, period=period, interval=interval, group_by="ticker", progress=False)
+    if isinstance(data.columns, pd.MultiIndex):
+        data.columns = data.columns.droplevel(0)
+        print(data.columns)
+    # Lagre til parquet cache
+    # Normaliser filnavn
+    fname = "-".join(symbols) if isinstance(symbols, list) else symbols
+    filepath = Path(outdir) / f"{fname}_{interval}"
+    parquet_cache.write_parquet_cache(
+        data,
+        filepath,
+        symbols=symbols,
+        interval=interval,
+        period=period,
+    )
+
+    return data
+
+
+if __name__ == "__main__":
+    download_yf("BTC-USD")

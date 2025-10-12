@@ -4,10 +4,14 @@ import matplotlib.pyplot as plt
 from ta.trend import EMAIndicator
 from ta.momentum import RSIIndicator
 
-data = yf.download("BTC-USD", period="1mo", interval="1h", group_by="column", progress=False)
-if isinstance(data.columns, pd.MultiIndex):
-    data.columns = data.columns.get_level_values(0)
-data = data.dropna().copy()
+def close_value(asset):
+    data = yf.download(asset, period="1wk", interval="1h", group_by="column", progress=False)
+    if isinstance(data.columns, pd.MultiIndex):
+        data.columns = data.columns.get_level_values(0)
+    return data.dropna().copy()
+
+
+data = close_value("BTC-USD")
 close = pd.to_numeric(data["Close"], errors="coerce")
 
 ema20 = EMAIndicator(close, window=20).ema_indicator()
