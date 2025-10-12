@@ -50,10 +50,10 @@ git remote add origin git@github.com:espenhoh/sigmabott.git
 
 ## Studie
 
-### Dag 1
+### Dag 1 Candlesticks
 [candlestick-charting-what-is-it](https://www.investopedia.com/trading/candlestick-charting-what-is-it/)
 
-### Dag 2
+### Dag 2 EMA og rsi
 [Exponential moving average (EMA)](https://www.investopedia.com/terms/e/ema.asp)
 
 - Alle glidende snitt indikatorer er lagging. De brukes til å verfisere at markedet er snudd, typeisk for sent å bruke dem til å entre markedet da det optimale tidspunktet har passert.
@@ -71,3 +71,7 @@ Brukes til å identifisere trading range i stigene og synkende trender
 - Bearish signaler i bearish trender
 
 Ikke så nyttig ved flat utvikling
+
+### Dag 3: Backtesting
+
+[Backtesting](https://www.investopedia.com/terms/b/backtesting.asp)
