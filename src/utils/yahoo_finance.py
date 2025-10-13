@@ -10,7 +10,7 @@ def download_yf(
     price_type="Close",
     cache=True,
     outdir="data"
-):
+) -> pd.DataFrame:
     """
     Henter historiske data fra Yahoo Finance for én eller flere tickere.
     Rydder opp i MultiIndex og returnerer et rent DataFrame.
@@ -28,6 +28,9 @@ def download_yf(
 
     # Hent data
     data = yf.download(symbols, period=period, interval=interval, group_by="ticker", progress=False)
+    if data is None:
+        raise NameError(f"Ticker: {symbols} not found?")
+    
     if isinstance(data.columns, pd.MultiIndex):
         data.columns = data.columns.droplevel(0)
         print(data.columns)
