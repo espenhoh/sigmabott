@@ -50,7 +50,3 @@ def download_yf(
     )
 
     return data
-
-
-if __name__ == "__main__":
-    download_yf("BTC-USD")
