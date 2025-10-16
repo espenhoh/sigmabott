@@ -1,7 +1,6 @@
 import yfinance as yf
 import pandas as pd
-import parquet_cache
-from pathlib import Path
+from . import parquet_cache
 
 def download_yf(
     symbols,
@@ -26,18 +25,22 @@ def download_yf(
         pd.DataFrame: Data med kolonner = tickere, rader = tidsstempel
     """
 
+    # Normaliser filnavn
+    fname = "-".join(symbols) if isinstance(symbols, list) else symbols
+    filepath = outdir + '\\' + f"{fname}_{interval}"
+    data = parquet_cache.read_parquet_cache(filepath, max_age_s=600)
+
+    
     # Hent data
     data = yf.download(symbols, period=period, interval=interval, group_by="ticker", progress=False)
     if data is None:
-        raise NameError(f"Ticker: {symbols} not found?")
+        raise NameError(f"Ticker: {symbols} error")
     
     if isinstance(data.columns, pd.MultiIndex):
         data.columns = data.columns.droplevel(0)
         print(data.columns)
+
     # Lagre til parquet cache
-    # Normaliser filnavn
-    fname = "-".join(symbols) if isinstance(symbols, list) else symbols
-    filepath = outdir + '\\' + f"{fname}_{interval}"
     parquet_cache.write_parquet_cache(
         data,
         filepath,
