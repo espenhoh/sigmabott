@@ -5,28 +5,33 @@ from datetime import datetime, timezone, timedelta
 import pandas as pd
 
 
-def read_parquet_cache(path:str, max_age_hours: int=0):
+def read_parquet_cache(path:str, max_age_s: int=0):
     """
     Leser en Parquet-fil hvis den finnes og er fersk nok.
 
     Args:
         path (Path | str): sti til fil
-        max_age_hours (float | None): maks alder i timer før nedlasting kreves
+        max_age_s (float | None): maks alder i sekunder før nedlasting kreves
 
     Returns:
         DataFrame | None  (None hvis ingen gyldig cache)
     """
-    in_path = Path(path)
+    in_path = Path(path).with_suffix('.parquet')
     if not in_path.exists():
         return None
 
     df: pd.DataFrame = pd.read_parquet(in_path)   # type: ignore[reportUnknownMemberType]
     meta = df.attrs or {}
     last_fetch = meta.get("last_fetch")
+    
 
-    if max_age_hours and last_fetch:
-        age = datetime.now(timezone.utc) - datetime.fromisoformat(last_fetch) # type: ignore[reportUnknownMemberType]
-        if age > timedelta(hours=max_age_hours):
+    if max_age_s and last_fetch:
+        naa = datetime.now(timezone.utc)
+        siste = datetime.fromisoformat(last_fetch)
+        age = naa - siste
+
+        print(f"last_fetch: {siste}, now: {naa}, and age: {age} max age {timedelta(seconds=max_age_s)}")
+        if age > timedelta(seconds=max_age_s):
             return None
     return df
 
