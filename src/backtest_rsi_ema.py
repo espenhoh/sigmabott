@@ -29,14 +29,27 @@ def backtest():
     data["cum_price"] = (1 + data["return"]).cumprod()
     data["cum_strategy"] = (1 + data["strategy_return"]).cumprod()
 
+    fig, (ax1, ax2) = plt.subplots(2, 1, sharex=True, figsize=(11, 6))
+
     # Plot
-    plt.figure(figsize=(10,5))
-    plt.plot(data.index, data["cum_price"], label="Kjøp & hold")
-    plt.plot(data.index, data["cum_strategy"], label="Strategi")
-    plt.legend()
-    plt.title("RSI+EMA Backtest")
+    #plt.figure(figsize=(10,5))
+    ax1.plot(data.index, data["cum_price"], label="Kjøp & hold")
+    ax1.plot(data.index, data["cum_strategy"], label="Strategi")
+    ax1.plot(data.index, data["EMA20"], label="EMA20")
+    ax1.legend()
+    ax1.set_title("RSI+EMA Backtest")
+
+    
+    ax2.plot(data.index, data["RSI"], label="RSI(14)", linewidth=1)
+    ax2.axhline(70, linestyle="--")
+    ax2.axhline(30, linestyle="--")
+    ax2.legend()
+    ax2.set_title("RSI")
+
+    plt.tight_layout()
     plt.show()
 
+    
     # Enkel statistikk
     total_ret = data["cum_strategy"].iloc[-1] - 1
     max_dd = (data["cum_strategy"]/data["cum_strategy"].cummax() - 1).min()
@@ -44,3 +57,5 @@ def backtest():
 
 if __name__ == "__main__":
     backtest()
+
+    
